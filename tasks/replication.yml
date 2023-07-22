@@ -50,6 +50,18 @@
     - mysql_replication_user.name is defined
     - (mysql_replication_master | length) > 0
 
+- name: Check slave replication status.
+  mysql_replication:
+    mode: getreplica
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+  ignore_errors: true
+  register: slave
+  when:
+    - mysql_replication_role == 'slave'
+    - (mysql_replication_master | length) > 0
+  tags: ['skip_ansible_galaxy']
+
 - name: Start replication.
   mysql_replication:
     mode: startreplica
